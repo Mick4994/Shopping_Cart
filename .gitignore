@@ -1,8 +1,8 @@
 *.db
-.idea
-.settings
+.idea/
+.settings/
 .classpath
 .project
 bin
-classes
+classes/
 *.xml
