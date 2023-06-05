@@ -75,7 +75,7 @@ public class ProductDataAccessor extends DataAccessor {
 			while ((line = inputFromFile1.readLine()) != null) {
 
 				st = new StringTokenizer(line, ",");
-
+				//每行的数据 通过字段分割 分别存储于相应的变量中
 				productName = st.nextToken().trim();
 				cas = st.nextToken().trim();
 				structure = st.nextToken().trim();
@@ -86,9 +86,9 @@ public class ProductDataAccessor extends DataAccessor {
 
 				productObject = getProductObject(productName, cas, structure,formula, price, realstock, category);
 
-				if (dataTable.containsKey(category)) {
+				if (dataTable.containsKey(category)) {//该类别的键如果存在，则获取相应的 ArrayList
 					productArrayList = dataTable.get(category);
-				} else {
+				} else {   //否则，创建一个新的 ArrayList 并将其添加到 dataTable 中
 					productArrayList = new ArrayList<Product>();
 					dataTable.put(category, productArrayList);
 				}
