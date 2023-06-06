@@ -5,4 +5,5 @@
 .project
 bin/
 classes/
+*.class
 *.xml
