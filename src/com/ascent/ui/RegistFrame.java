@@ -83,15 +83,15 @@ public class RegistFrame extends JFrame {
 
 		exitButton.addActionListener(new ExitActionListener());
 		regist.addActionListener(new RegistActionListener());
-		repassword.addFocusListener(new MyFocusListener());
+		//repassword.addFocusListener(new MyFocusListener());
 		this.addWindowListener(new WindowCloser());
 		this.addWindowFocusListener(new WindowFocusListener() {// 设置父窗口
-					public void windowGainedFocus(WindowEvent e) {
-					}
-					public void windowLostFocus(WindowEvent e) {
-						e.getWindow().toFront();
-					}
-				});
+			public void windowGainedFocus(WindowEvent e) {
+			}
+			public void windowLostFocus(WindowEvent e) {
+				e.getWindow().toFront();
+			}
+		});
 		try {
 			userDataClient = new UserDataClient();
 		} catch (IOException e1) {
@@ -117,10 +117,23 @@ public class RegistFrame extends JFrame {
 	class RegistActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			// 用户注册操作
-			boolean bo = userDataClient.addUser(userText.getText(), new String(password.getPassword()));
-			if (bo) {
+			String text = userText.getText();//用户输入的账号
+			String pwd = new String(password.getPassword());//用户输入的密码
+			String repPwd = new String(repassword.getPassword());//用户输入的重复密码
+
+			if (text.equals("")) {
+				tip.setText("账户不能为空");
+			}
+			else if (pwd.equals("")) {
+				tip.setText("密码不能为空!");
+			}
+			else if (!pwd.equals(repPwd)) {
+				tip.setText("两次密码不一致！");
+			}
+			else if (userDataClient.addUser(text, pwd)) {
 				tip.setText("注册成功！");
-			} else {
+			}
+			else {
 				tip.setText("用户名已存在！");
 			}
 		}
@@ -141,23 +154,23 @@ public class RegistFrame extends JFrame {
 	 * 密码不一致触发的事件监听器处理类
 	 * @author ascent
 	 */
-	class MyFocusListener implements FocusListener {
-
-		public void focusGained(FocusEvent arg0) {
-		}
-
-		public void focusLost(FocusEvent e) {
-			if (e.getSource().equals(password)) {
-				if (new String(password.getPassword()) == "" || new String(password.getPassword()) == null) {
-					tip.setText("密码不能为空!");
-				}
-			} else if (e.getSource().equals(repassword)) {
-				if (!new String(password.getPassword()).equals(new String(password.getPassword()))) {
-					tip.setText("两次密码不一致！");
-				}
-			} else {
-				tip.setText("");
-			}
-		}
-	}
+//	class MyFocusListener implements FocusListener {
+//
+//		public void focusGained(FocusEvent e) {
+//		}
+//
+//		public void focusLost(FocusEvent e) {
+//			if (e.getSource().equals(password)) {
+//				if (new String(password.getPassword()).equals("")) {
+//					tip.setText("密码不能为空!");
+//				}
+//			} else if (e.getSource().equals(repassword)) {
+//				if (!new String(password.getPassword()).equals(new String(password.getPassword()))) {
+//					tip.setText("两次密码不一致！");
+//				}
+//			} else {
+//				tip.setText("");
+//			}
+//		}
+//	}
 }

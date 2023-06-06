@@ -106,7 +106,7 @@ public class UserDataClient implements ProtocolPort {
 	 */
 	public boolean addUser(String username, String password) {
 		HashMap<String,User> map = this.getUsers();
-		if (map.containsKey(username)) {
+		if (username.equals("") || map.containsKey(username)) {
 			return false;
 		} else {
 			try {
