@@ -13,6 +13,10 @@ import com.ascent.bean.User;
  * @version 1.0
  */
 public class UserDataClient implements ProtocolPort {
+	/**
+	 * 验证码信息
+	 */
+	private String codeMsg;
 
 	/**
 	 * socket引用
@@ -122,6 +126,66 @@ public class UserDataClient implements ProtocolPort {
 
 		}
 		return false;
+	}
+
+	/**
+	 * 请求发送验证码
+	 */
+	public String sendCode(String phone) {
+		try {
+			Integer.parseInt(phone);
+		} catch (NumberFormatException numberFormatException) {
+			return "请输入正确的电话格式(7位号码)";
+		}
+		if (phone.length() != 7) {
+			System.out.println(phone.length());
+			return "电话长度不正确";
+		}
+		try {
+			log("发送请求: OP_SEND_CODE  ");
+			outputToServer.writeInt(ProtocolPort.OP_SEND_CODE);
+			outputToServer.flush();
+			log("接收数据...");
+			codeMsg = (String) inputFromServer.readObject();
+			//System.out.println("接收到验证码： " + codeMsg);
+			log("接收到验证码: " + codeMsg);
+			return "发送成功";
+		} catch (IOException e) {
+			return e.getMessage();
+		} catch (ClassNotFoundException e) {
+			return e.getMessage();
+		}
+	}
+
+	/**
+	 * 密码找回验证
+	 * @param phone 电话
+	 * @param username 用户名
+	 * @param msg 验证码
+	 * @return String tip:返回提示信息
+	 */
+	public String searchPwd(String phone, String username , String msg) {
+		String tip = "";
+		try {
+			Integer.parseInt(phone);
+		} catch (NumberFormatException numberFormatException) {
+			return "请输入正确的电话格式(7位号码)";
+		}
+		if (phone.length() != 7) {
+			System.out.println(phone.length());
+			return "电话长度不正确";
+		}
+		HashMap<String,User> map = this.getUsers();
+		if (!msg.equals(codeMsg)) {
+			tip = "验证码不正确";
+		}
+		else if (username.equals("") || !map.containsKey(username)) {
+			tip = "用户不存在";
+		} else {
+			System.out.println("用户密码： " + map.get(username).getPassword());
+			tip = "密码找回成功";
+		}
+		return tip;
 	}
 
 }
