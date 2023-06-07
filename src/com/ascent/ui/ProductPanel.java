@@ -196,7 +196,7 @@ public class ProductPanel extends JPanel {
 		public void actionPerformed(ActionEvent event) {
 			System.out.println("启动客服聊天");
 			ChatGUI chatGUI = new ChatGUI();
-
+			chatGUI.frame.setVisible(true);
 		}
 	}
 
