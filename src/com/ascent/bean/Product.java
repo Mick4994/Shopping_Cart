@@ -21,7 +21,9 @@ public class Product implements java.lang.Comparable, java.io.Serializable {
 	private String realstock; // 数量
 
 	private String category; // 类别
-	
+
+	private int num = 1; // 商品购买个数
+
 	/**
 	 * 默认构造方法
 	 */
@@ -47,6 +49,14 @@ public class Product implements java.lang.Comparable, java.io.Serializable {
 		this.realstock = realstock;
 		this.cas = cas;
 		this.category = category;
+	}
+
+	public int getNum() {
+		return num;
+	}
+
+	public void setNum(int num) {
+		this.num = num;
 	}
 
 	/**

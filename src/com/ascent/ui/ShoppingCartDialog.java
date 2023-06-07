@@ -11,6 +11,8 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -97,10 +99,12 @@ public class ShoppingCartDialog extends JDialog {
 			JPanel panel = new JPanel(new FlowLayout());
 			JLabel l = new JLabel("数量：");
 			JTextField jtf = new JTextField(7);
-			jtf.setText("1");
+			jtf = new JTextField(7);
+			jtf.setText(String.valueOf(product.getNum()));
 			panel.add(pruductLabel);
 			panel.add(l);
 			panel.add(jtf);
+			jtf.addFocusListener(new JtfFocusListener(product, jtf));
 			textMap.put(product.getProductname(), jtf);
 			pruductLabel.setForeground(Color.black);
 			infoPanel.add(panel, c);
@@ -122,6 +126,38 @@ public class ShoppingCartDialog extends JDialog {
 		this.pack();
 		Point parentLocation = parentFrame.getLocation();
 		this.setLocation(parentLocation.x + 50, parentLocation.y + 50);
+	}
+
+	/**
+	 * 处理数量输入框（商品的个数）的内部类
+	 */
+	class JtfFocusListener implements FocusListener {
+		private Product theProduct;
+		private JTextField jtf;
+
+		public JtfFocusListener(Product theProduct, JTextField jtf) {
+			this.theProduct = theProduct;
+			this.jtf = jtf;
+		}
+
+		@Override
+		public void focusGained(FocusEvent e) {
+			int n = theProduct.getNum();
+			jtf.setText(String.valueOf(n));
+		}
+
+		@Override
+		public void focusLost(FocusEvent e) {
+			int n = theProduct.getNum();
+			try {
+				n = Integer.parseInt(jtf.getText());
+				jtf.setText(jtf.getText());
+			} catch (NumberFormatException numberFormatException) {
+				jtf.setText("格式错误");
+				System.out.println("商品数量输入格式错误");
+			}
+			theProduct.setNum(n);
+		}
 	}
 
 	/**
@@ -152,6 +188,10 @@ public class ShoppingCartDialog extends JDialog {
 	class ClearButtonActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			ShoppingCart shopping = new ShoppingCart();
+			ArrayList<Product> shoppingList = shopping.getShoppingList();
+			for (int i = 0; i < shoppingList.size(); i++) {
+				shoppingList.get(i).setNum(1);
+			}
 			shopping.clearProduct();
 			shoppingButton.setEnabled(false);
 			setVisible(false);
