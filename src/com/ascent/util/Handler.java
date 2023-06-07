@@ -69,6 +69,9 @@ public class Handler extends Thread implements ProtocolPort {
 				case ProtocolPort.OP_ADD_USERS:
 					opAddUser();
 					break;
+				case ProtocolPort.OP_SEND_CODE:
+					opGetMsg();
+					break;
 				default:
 					System.out.println("错误代码");
 				}
@@ -77,6 +80,21 @@ public class Handler extends Thread implements ProtocolPort {
 			log(exc);
 		}
 	}
+
+	/**
+	 * 随机生成验证码并返回
+	 */
+	private void opGetMsg() {
+		String msg = String.valueOf((int)(Math.random() * 100000));
+		try {
+			outputToClient.writeObject(msg);
+			outputToClient.flush();
+		} catch (IOException exe) {
+			log("发生异常：" + exe);
+		}
+	}
+
+
 
 	/**
 	 * 返回用户信息

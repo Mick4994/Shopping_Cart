@@ -35,4 +35,9 @@ public interface ProtocolPort {
 	 * 默认服务器地址
 	 */
 	public static final String DEFAULT_HOST = "localhost";
+
+	/**
+	 * 验证码发送标志
+	 */
+	public static final int OP_SEND_CODE = 104;
 }
