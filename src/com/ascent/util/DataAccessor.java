@@ -37,6 +37,14 @@ public abstract class DataAccessor {
 	}
 
 	/**
+	 * 设置用户信息
+	 */
+	public void saveUsers(HashMap<String, User> userTables) {
+		userTable = userTables;
+	}
+
+
+	/**
 	 * 获得产品分类名称集合
 	 * @return categorySet 产品分类名称集合
 	 */
@@ -71,7 +79,7 @@ public abstract class DataAccessor {
 	 * @return userTable Key:用户名，Value:用户对象
 	 */
 	public HashMap<String,User> getUsers() {
-		return this.userTable;
+		return userTable;
 	}
 
 	/**
