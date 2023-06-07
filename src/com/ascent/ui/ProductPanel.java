@@ -56,7 +56,12 @@ public class ProductPanel extends JPanel {
 			myDataClient = new ProductDataClient();
 			selectionLabel = new JLabel("选择类别");
 			categoryComboBox = new JComboBox();
-			categoryComboBox.addItem("-------");
+			categoryComboBox.addItem("请选择药品分类");
+
+			JLabel lblBackground = new JLabel(); // 创建一个标签组件对象
+			ImageIcon icon = new ImageIcon("resourcepack/background.jpg"); // 创建背景图片对象
+			lblBackground.setIcon(icon); // 设置标签组件要显示的图标
+			lblBackground.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight()); // 设置组件的显示位置及大小
 
 			ArrayList categoryArrayList = myDataClient.getCategories();
 
@@ -120,7 +125,7 @@ public class ProductPanel extends JPanel {
 	protected void populateListBox() {
 		try {
 			String category = (String) categoryComboBox.getSelectedItem();
-			if (!category.startsWith("---")) {
+			if (!category.equals("请选择药品分类")) {
 				productArrayList = myDataClient.getProducts(category);
 			} else {
 				productArrayList = new ArrayList<Product>();

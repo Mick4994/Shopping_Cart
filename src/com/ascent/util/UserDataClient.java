@@ -13,6 +13,10 @@ import com.ascent.bean.User;
  * @version 1.0
  */
 public class UserDataClient implements ProtocolPort {
+	/**
+	 * 验证码信息
+	 */
+	private String codeMsg;
 
 	/**
 	 * socket引用
@@ -125,72 +129,63 @@ public class UserDataClient implements ProtocolPort {
 	}
 
 	/**
-	 * 清除用户信息
+	 * 请求发送验证码
 	 */
-	public boolean clearUsers() {
+	public String sendCode(String phone) {
 		try {
-			log("发送请求: OP_CLEAR_USERS");
-			outputToServer.writeInt(ProtocolPort.OP_CLEAR_USERS);
+			Integer.parseInt(phone);
+		} catch (NumberFormatException numberFormatException) {
+			return "请输入正确的电话格式(7位号码)";
+		}
+		if (phone.length() != 7) {
+			System.out.println(phone.length());
+			return "电话长度不正确";
+		}
+		try {
+			log("发送请求: OP_SEND_CODE  ");
+			outputToServer.writeInt(ProtocolPort.OP_SEND_CODE);
 			outputToServer.flush();
 			log("接收数据...");
-			return true;
+			codeMsg = (String) inputFromServer.readObject();
+			//System.out.println("接收到验证码： " + codeMsg);
+			log("接收到验证码: " + codeMsg);
+			return "发送成功";
 		} catch (IOException e) {
-			e.printStackTrace();
+			return e.getMessage();
+		} catch (ClassNotFoundException e) {
+			return e.getMessage();
 		}
-		return false;
 	}
 
 	/**
-	 * 拷贝用户信息
+	 * 密码找回验证
+	 * @param phone 电话
+	 * @param username 用户名
+	 * @param msg 验证码
+	 * @return String tip:返回提示信息
 	 */
-	public boolean updateUsers(Object[][] tableData) {
+	public String searchPwd(String phone, String username , String msg) {
+		String tip = "";
 		try {
-			// 清空用户信息
-			clearUsers();
-
-			HashMap<String, User> userTable = getUsers();
-			userTable.clear();
-			// 更新用户信息
-			for (Object[] rowData : tableData) {
-				String username = (String) rowData[0];
-				String password = (String) rowData[1];
-				int permission = (int) rowData[2];
-				System.out.println(username+" "+password+" "+permission);
-				if (!username.isEmpty()) {
-					User user = new User(username, password, permission);
-					userTable.put(username, user);
-				}
-			}
-
-			// 保存用户信息
-			saveUsers(userTable);
-
-			return true;
-		} catch (Exception e) {
-			// 异常处理
-			e.printStackTrace();
-			return false;
+			Integer.parseInt(phone);
+		} catch (NumberFormatException numberFormatException) {
+			return "请输入正确的电话格式(7位号码)";
 		}
-	}
-
-
-	/**
-	 * 保存用户信息
-	 */
-	public void saveUsers(HashMap<String, User> userTable) {
-		try {
-			log("发送请求: OP_SAVE_USERS");
-			outputToServer.writeInt(ProtocolPort.OP_ADD_USERS);
-			//outputToServer.writeInt(userTable.size()); // 发送用户表的大小
-			for (User user : userTable.values()) {
-				outputToServer.writeObject(user); // 逐个发送用户对象
-				System.out.println(user);
-			}
-			outputToServer.flush();
-			log("保存用户信息成功");
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (phone.length() != 7) {
+			System.out.println(phone.length());
+			return "电话长度不正确";
 		}
+		HashMap<String,User> map = this.getUsers();
+		if (!msg.equals(codeMsg)) {
+			tip = "验证码不正确";
+		}
+		else if (username.equals("") || !map.containsKey(username)) {
+			tip = "用户不存在";
+		} else {
+			System.out.println("用户密码： " + map.get(username).getPassword());
+			tip = "密码找回成功";
+		}
+		return tip;
 	}
 
 }

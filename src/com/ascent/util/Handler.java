@@ -69,8 +69,8 @@ public class Handler extends Thread implements ProtocolPort {
 				case ProtocolPort.OP_ADD_USERS:
 					opAddUser();
 					break;
-				case ProtocolPort.OP_CLEAR_USERS:
-					opDeleteUser();
+				case ProtocolPort.OP_SEND_CODE:
+					opGetMsg();
 					break;
 				default:
 					System.out.println("错误代码");
@@ -82,11 +82,18 @@ public class Handler extends Thread implements ProtocolPort {
 	}
 
 	/**
-	 * 删除用户信息
+	 * 随机生成验证码并返回
 	 */
-	private void opDeleteUser() {
-	    new	ProductDataAccessor().deleteUser();
+	private void opGetMsg() {
+		String msg = String.valueOf((int)(Math.random() * 100000));
+		try {
+			outputToClient.writeObject(msg);
+			outputToClient.flush();
+		} catch (IOException exe) {
+			log("发生异常：" + exe);
+		}
 	}
+
 
 
 	/**
@@ -125,6 +132,11 @@ public class Handler extends Thread implements ProtocolPort {
 			String category = (String) inputFromClient.readObject();
 			log("类别是 " + category);
 
+			if(category.equals("请选择药品分类")) {
+				log("返回未选状态");
+				return;
+			}
+
 			ArrayList<Product> recordingList = myProductDataAccessor.getProducts(category);
 
 			outputToClient.writeObject(recordingList);
@@ -145,7 +157,6 @@ public class Handler extends Thread implements ProtocolPort {
 	public void opAddUser() {
 		try {
 			User user = (User) this.inputFromClient.readObject();
-			System.out.println(user);
 			this.myProductDataAccessor.save(user);
 		} catch (IOException e) {
 			log("发生异常:  " + e);
@@ -155,32 +166,6 @@ public class Handler extends Thread implements ProtocolPort {
 			e.printStackTrace();
 		}
 	}
-
-//	/**
-//	 * 处理多用户注册
-//	 */
-//	public void opSaveUsersRequest() {
-//		try {
-//			// 接收传递的对象
-//			ObjectInputStream inputStream = new ObjectInputStream(this.inputFromClient);
-//			HashMap<String, User> userTable = (HashMap<String, User>) inputStream.readObject();
-//
-//			// 遍历 userTable，并将用户保存到数据库中
-//			for (Map.Entry<String, User> entry : userTable.entrySet()) {
-//				User user = entry.getValue();
-//				this.myProductDataAccessor.save(user);
-//			}
-//
-//			log("保存用户信息成功");
-//		} catch (IOException e) {
-//			log("发生异常: " + e);
-//			e.printStackTrace();
-//		} catch (ClassNotFoundException e) {
-//			log("发生异常: " + e);
-//			e.printStackTrace();
-//		}
-//	}
-
 
 	/**
 	 * 处理线程运行时标志
