@@ -48,6 +48,15 @@ public class LoginFrame extends JFrame {
 
 		JPanel loginPanel = new JPanel();
 
+		JPanel userPanel = new JPanel();
+		JPanel passwordPanel = new JPanel();
+		userPanel.setLayout(new GridLayout(1,2));
+
+		passwordPanel.setLayout(new GridLayout(1,2));
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new GridLayout(2,2,15,15));
+
+
 		JLabel userLabel = new JLabel("用户帐号：");
 		JLabel passwordLabel = new JLabel("用户密码：");
 
@@ -71,21 +80,28 @@ public class LoginFrame extends JFrame {
 		exitButton.setFont(new Font("宋体", Font.BOLD, 10));//设置字体，其中第一个参数是字体名称，第二个参数是字体样式（加粗），第三个参数是字体大小。
 		exitButton.setContentAreaFilled(false);
 
-		loginPanel.add(userLabel);
-		loginPanel.add(new JScrollPane(userText));
-		loginPanel.add(passwordLabel);
-		loginPanel.add(new JScrollPane(password));
-		loginPanel.add(loginButton);
-		loginPanel.add(manageLogin);
-		loginPanel.add(regist);
-		loginPanel.add(forgotpwd);
+		userPanel.add(userLabel);
+		userPanel.add(new JScrollPane(userText));
+		loginPanel.add(userPanel);
+
+		passwordPanel.add(passwordLabel);
+		passwordPanel.add(new JScrollPane(password));
+		loginPanel.add(passwordPanel);
+
+		buttonPanel.add(loginButton);
+		buttonPanel.add(manageLogin);
+		buttonPanel.add(regist);
+		buttonPanel.add(forgotpwd);
+		buttonPanel.setPreferredSize(new Dimension(350,60));
+
+		loginPanel.add(buttonPanel);
 		loginPanel.add(exitButton);
 
 		setResizable(false);
 //		setSize(260, 150);
 //		setLocation(300, 100);
-		setSize(250, 175);
-		setLocation(300, 100);
+		setSize(400, 200);
+		setLocation(400, 100);
 
 		JPanel tipPanel = new JPanel();
 
