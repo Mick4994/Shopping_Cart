@@ -2,6 +2,7 @@ package com.ascent.util;
 
 import java.util.ArrayList;
 import com.ascent.bean.Product;
+import com.ascent.bean.SCProduct;
 
 /**
  * 购物车
@@ -13,13 +14,13 @@ public class ShoppingCart {
 	/**
 	 * 存放购买商品信息
 	 */
-	private static ArrayList<Product> shoppingList = new ArrayList<Product>();
+	private ArrayList<SCProduct> shoppingList = new ArrayList<SCProduct>();
 
 	/**
 	 * 获取所有购买商品信息
 	 * @return shoppingList
 	 */
-	public ArrayList<Product> getShoppingList() {
+	public ArrayList<SCProduct> getShoppingList() {
 		return this.shoppingList;
 	}
 
@@ -28,17 +29,18 @@ public class ShoppingCart {
 	 * @param myProduct
 	 */
 	public void addProduct(Product myProduct) {
-		Product product;
+		SCProduct product;
 		boolean bo = false;
 		for (int i = 0; i < shoppingList.size(); i++) {
 			product = shoppingList.get(i);
-			if (myProduct.getProductname().trim().equals(product.getProductname().trim())) {
+			if (myProduct.getProductname().trim().equals(product.getTheProduct().getProductname().trim())) {
+				product.setNum(product.getNum() + 1);
 				bo = true;
 				break;
 			}
 		}
 		if (!bo) {
-			shoppingList.add(myProduct);
+			shoppingList.add(new SCProduct(myProduct));
 		}
 	}
 

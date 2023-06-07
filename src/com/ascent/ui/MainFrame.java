@@ -1,5 +1,9 @@
 package com.ascent.ui;
 
+import com.ascent.bean.Product;
+import com.ascent.bean.User;
+import com.ascent.util.ShoppingCart;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -22,10 +26,14 @@ public class MainFrame extends JFrame {
 	 */
 	protected ProductPanel productPanel;
 
+	protected User user;//用户
+
 	/**
-	 * 默认构造方法
+	 * 构造方法
 	 */
-	public MainFrame() {
+	public MainFrame(User user) {
+		this.user = user;
+		user.shoppingCart = new ShoppingCart();
 
 		setTitle("欢迎使用AscentSys应用! ");
 

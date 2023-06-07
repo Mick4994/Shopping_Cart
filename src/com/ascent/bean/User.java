@@ -1,5 +1,7 @@
 package com.ascent.bean;
 
+import com.ascent.util.ShoppingCart;
+
 /**
  * 实体类User，用来描述用户的信息类
  * @author ascent
@@ -14,6 +16,8 @@ public class User implements java.io.Serializable {
 	private String password; // 密码
 
 	private int authority; // 用户权限
+
+	public ShoppingCart shoppingCart; //购物车
 
 	/**
 	 * 默认构造方法

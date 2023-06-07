@@ -7,6 +7,7 @@ import javax.swing.border.*;
 
 import com.ascent.bean.Product;
 import com.ascent.util.ShoppingCart;
+import com.sun.tools.javac.Main;
 
 /**
  * 这个类显示产品详细信息对话框
@@ -15,6 +16,7 @@ import com.ascent.util.ShoppingCart;
  */
 @SuppressWarnings("serial")
 public class ProductDetailsDialog extends JDialog {
+	protected ShoppingCart shoppingCar;
 
 	protected Product myProduct;
 
@@ -28,8 +30,8 @@ public class ProductDetailsDialog extends JDialog {
 	 * @param theProduct 当前查看的商品对象
 	 * @param shoppingButton 购买按钮
 	 */
-	public ProductDetailsDialog(Frame theParentFrame, Product theProduct,
-			JButton shoppingButton) {
+	public ProductDetailsDialog(MainFrame theParentFrame, Product theProduct,
+								JButton shoppingButton) {
 		this(theParentFrame, "药品详细信息 " + theProduct.getProductname(),
 				theProduct, shoppingButton);
 	}
@@ -41,7 +43,7 @@ public class ProductDetailsDialog extends JDialog {
 	 * @param theProduct 当前查看的商品对象
 	 * @param shoppingButton 购买按钮
 	 */
-	public ProductDetailsDialog(Frame theParentFrame, String theTitle,
+	public ProductDetailsDialog(MainFrame theParentFrame, String theTitle,
 			Product theProduct, JButton shoppingButton) {
 
 		super(theParentFrame, theTitle, true);
@@ -49,6 +51,7 @@ public class ProductDetailsDialog extends JDialog {
 		myProduct = theProduct;
 		parentFrame = theParentFrame;
 		this.shoppingButton = shoppingButton;
+		this.shoppingCar = theParentFrame.user.shoppingCart;
 
 		buildGui();
 	}
@@ -163,7 +166,6 @@ public class ProductDetailsDialog extends JDialog {
 	 * 处理"购买"按钮的内部类
 	 */
 	class PurchaseButtonActionListener implements ActionListener {
-		ShoppingCart shoppingCar = new ShoppingCart();
 		public void actionPerformed(ActionEvent event) {
 			shoppingCar.addProduct(myProduct);
 			shoppingButton.setEnabled(true);

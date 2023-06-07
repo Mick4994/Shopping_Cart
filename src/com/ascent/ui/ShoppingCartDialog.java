@@ -24,7 +24,9 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import com.ascent.bean.Product;
+import com.ascent.bean.SCProduct;
 import com.ascent.util.ShoppingCart;
+import com.sun.tools.javac.Main;
 
 /**
  * 显示购物车所购买商品信息
@@ -49,11 +51,12 @@ public class ShoppingCartDialog extends JDialog {
 	 * @param theParentFrame 父窗体
 	 * @param shoppingButton 查看购物车按钮
 	 */
-	public ShoppingCartDialog(Frame theParentFrame, JButton shoppingButton) {
+	public ShoppingCartDialog(MainFrame theParentFrame, JButton shoppingButton) {
 		super(theParentFrame, "购物车", true);
 		textMap = new HashMap<String,JTextField>();
 		parentFrame = theParentFrame;
 		this.shoppingButton = shoppingButton;
+		this.shoppingCart = theParentFrame.user.shoppingCart;
 
 		lookShoppingCar();
 	}
@@ -82,15 +85,16 @@ public class ShoppingCartDialog extends JDialog {
 		c.anchor = GridBagConstraints.WEST;
 		c.insets = new Insets(10, 0, 2, 10);
 
-		shoppingCart = new ShoppingCart();
-		ArrayList<Product> shoppingList = shoppingCart.getShoppingList();
+		//shoppingCart = new ShoppingCart();
+		ArrayList<SCProduct> shoppingList = shoppingCart.getShoppingList();
 
 		JLabel pruductLabel;
 		Product product = null;
 		for (int i = 0; i < shoppingList.size(); i++) {
 			c.gridy = c.gridy + 2;
 			String str = "";
-			product = shoppingList.get(i);
+			SCProduct scProduct = shoppingList.get(i);
+			product = scProduct.getTheProduct();
 			str = str + "产品名：" + product.getProductname() + "    ";
 			str = str + "CAS号：" + product.getCas() + "    ";
 			str = str + "公式：" + product.getFormula() + "    ";
@@ -99,12 +103,11 @@ public class ShoppingCartDialog extends JDialog {
 			JPanel panel = new JPanel(new FlowLayout());
 			JLabel l = new JLabel("数量：");
 			JTextField jtf = new JTextField(7);
-			jtf = new JTextField(7);
-			jtf.setText(String.valueOf(product.getNum()));
+			jtf.setText(String.valueOf(scProduct.getNum()));
 			panel.add(pruductLabel);
 			panel.add(l);
 			panel.add(jtf);
-			jtf.addFocusListener(new JtfFocusListener(product, jtf));
+			jtf.addFocusListener(new JtfFocusListener(scProduct, jtf));
 			textMap.put(product.getProductname(), jtf);
 			pruductLabel.setForeground(Color.black);
 			infoPanel.add(panel, c);
@@ -132,10 +135,10 @@ public class ShoppingCartDialog extends JDialog {
 	 * 处理数量输入框（商品的个数）的内部类
 	 */
 	class JtfFocusListener implements FocusListener {
-		private Product theProduct;
+		private SCProduct theProduct;
 		private JTextField jtf;
 
-		public JtfFocusListener(Product theProduct, JTextField jtf) {
+		public JtfFocusListener(SCProduct theProduct, JTextField jtf) {
 			this.theProduct = theProduct;
 			this.jtf = jtf;
 		}
@@ -187,12 +190,8 @@ public class ShoppingCartDialog extends JDialog {
 	 */
 	class ClearButtonActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			ShoppingCart shopping = new ShoppingCart();
-			ArrayList<Product> shoppingList = shopping.getShoppingList();
-			for (int i = 0; i < shoppingList.size(); i++) {
-				shoppingList.get(i).setNum(1);
-			}
-			shopping.clearProduct();
+			//ShoppingCart shopping = new ShoppingCart();
+			shoppingCart.clearProduct();
 			shoppingButton.setEnabled(false);
 			setVisible(false);
 		}
