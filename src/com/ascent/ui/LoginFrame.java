@@ -144,8 +144,35 @@ public class LoginFrame extends JFrame {
 	class ManageActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
-
+			boolean bo = false;
+			HashMap userTable = userDataClient.getUsers();
+			if (userTable != null) {
+				String text = userText.getText();//用户输入的账号
+				String pwd = new String(password.getPassword());//用户输入的密码
+				if (userTable.containsKey(text)) {
+					User userObject = (User) userTable.get(text);
+					if (userObject.getAuthority() == 1 && userObject.getPassword().equals(pwd)) {
+						bo = true;
+					}
+				}
+				if (text.equals("")) {
+					tip.setText("账号不能为空");
+				}
+				else if (pwd.equals("")) {
+					tip.setText("密码不能为空");
+				}
+				else if (bo) {
+					userDataClient.closeSocKet();
+					setVisible(false);
+					dispose();
+					AdministratorInterface ui = new AdministratorInterface();
+					ui.setVisible(true);
+				} else {
+					tip.setText("帐号不存在,或密码错误.");
+				}
+			} else {
+				tip.setText("服务器连接失败,请稍候再试.");
+			}
 		}
 	}
 

@@ -38,7 +38,7 @@ public class ShoppingCartDialog extends JDialog {
 
 	protected ShoppingCart shoppingCart;
 
-	protected Frame parentFrame;
+	protected MainFrame parentFrame;
 
 	private JButton shoppingButton;
 
@@ -104,9 +104,17 @@ public class ShoppingCartDialog extends JDialog {
 			JLabel l = new JLabel("数量：");
 			JTextField jtf = new JTextField(7);
 			jtf.setText(String.valueOf(scProduct.getNum()));
+
+			JButton delButton = new JButton("删除");
+
 			panel.add(pruductLabel);
 			panel.add(l);
 			panel.add(jtf);
+
+			panel.add(delButton);
+
+			delButton.addActionListener(new DelActionListener(product.getProductname()));
+
 			jtf.addFocusListener(new JtfFocusListener(scProduct, jtf));
 			textMap.put(product.getProductname(), jtf);
 			pruductLabel.setForeground(Color.black);
@@ -129,6 +137,25 @@ public class ShoppingCartDialog extends JDialog {
 		this.pack();
 		Point parentLocation = parentFrame.getLocation();
 		this.setLocation(parentLocation.x + 50, parentLocation.y + 50);
+	}
+
+	/**
+	 * 处理删除按钮事件监听的内部类
+	 */
+	class DelActionListener implements ActionListener {
+		String key;
+
+		public DelActionListener(String productName) {
+			this.key = productName;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println(key + "-----------");
+			shoppingCart.delProduct(key);
+			setVisible(false);//关闭当前界面
+			new ShoppingCartDialog(parentFrame, shoppingButton).setVisible(true);//刷新界面
+		}
 	}
 
 	/**
