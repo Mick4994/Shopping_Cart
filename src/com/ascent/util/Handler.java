@@ -114,6 +114,11 @@ public class Handler extends Thread implements ProtocolPort {
 			String category = (String) inputFromClient.readObject();
 			log("类别是 " + category);
 
+			if(category.equals("请选择药品分类")) {
+				log("返回未选状态");
+				return;
+			}
+
 			ArrayList<Product> recordingList = myProductDataAccessor.getProducts(category);
 
 			outputToClient.writeObject(recordingList);
