@@ -24,6 +24,9 @@ public class ProductDetailsDialog extends JDialog {
 
 	protected JButton shoppingButton;
 
+	protected JTextField buyNumTextField;
+
+	protected int buyNum = 1;
 	/**
 	 * 带三个参数的构造方法
 	 * @param theParentFrame 父窗体
@@ -35,6 +38,7 @@ public class ProductDetailsDialog extends JDialog {
 		this(theParentFrame, "药品详细信息 " + theProduct.getProductname(),
 				theProduct, shoppingButton);
 	}
+
 
 	/**
 	 * 带四个参数的构造方法
@@ -142,10 +146,23 @@ public class ProductDetailsDialog extends JDialog {
 		bottomPanel.add(okButton);
 		JButton purchaseButton = new JButton("购买");
 		bottomPanel.add(purchaseButton);
+		JButton delButton = new JButton("-");
+		JButton plusButton = new JButton("+");
+
+		buyNumTextField = new JTextField(5);
+
+		buyNumTextField.setText(String.valueOf(buyNum));
+
+		bottomPanel.add(delButton);
+		bottomPanel.add(buyNumTextField);
+		bottomPanel.add(plusButton);
 		container.add(BorderLayout.SOUTH, bottomPanel);
+
 
 		okButton.addActionListener(new OkButtonActionListener());
 		purchaseButton.addActionListener(new PurchaseButtonActionListener());
+		delButton.addActionListener(new DelButtonActionListener());
+		plusButton.addActionListener(new plusButtonActionListener());
 
 		this.pack();
 
@@ -167,9 +184,24 @@ public class ProductDetailsDialog extends JDialog {
 	 */
 	class PurchaseButtonActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			shoppingCar.addProduct(myProduct);
+			System.out.println("buyNum: " + String.valueOf(buyNum));
+			shoppingCar.addProduct(myProduct, buyNum);
 			shoppingButton.setEnabled(true);
 			setVisible(false);
+		}
+	}
+	class DelButtonActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			if(buyNum > 1) {
+				buyNum--;
+				buyNumTextField.setText(String.valueOf(buyNum));
+			}
+		}
+	}
+	class plusButtonActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			buyNum++;
+			buyNumTextField.setText(String.valueOf(buyNum));
 		}
 	}
 }

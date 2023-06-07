@@ -5,6 +5,7 @@ import javax.swing.event.*;
 
 import com.ascent.bean.Product;
 import com.ascent.util.ProductDataClient;
+import com.ascent.ui.ChatGUI;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -31,6 +32,8 @@ public class ProductPanel extends JPanel {
 	protected JScrollPane productScrollPane;
 
 	protected JButton detailsButton;
+
+	protected JButton chatButton;
 
 	protected JButton clearButton;
 
@@ -82,6 +85,7 @@ public class ProductPanel extends JPanel {
 			clearButton = new JButton("清空");
 			exitButton = new JButton("退出");
 			shoppingButton = new JButton("查看购物车");
+			chatButton = new JButton("客服聊天");
 
 			bottomPanel = new JPanel();
 
@@ -99,12 +103,16 @@ public class ProductPanel extends JPanel {
 			bottomPanel.add(detailsButton);
 			bottomPanel.add(clearButton);
 			bottomPanel.add(exitButton);
+			bottomPanel.add(chatButton);
 
 			this.add(BorderLayout.SOUTH, bottomPanel);
 
 			detailsButton.addActionListener(new DetailsActionListener());
 			clearButton.addActionListener(new ClearActionListener());
 			exitButton.addActionListener(new ExitActionListener());
+
+			chatButton.addActionListener(new chatActionListener());
+
 			shoppingButton.addActionListener(new ShoppingActionListener());
 			categoryComboBox.addItemListener(new GoItemListener());
 			productListBox.addListSelectionListener(new ProductListSelectionListener());
@@ -180,6 +188,15 @@ public class ProductPanel extends JPanel {
 	class ExitActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			parentFrame.exit();
+		}
+	}
+
+	class chatActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			System.out.println("启动客服聊天");
+			ChatGUI chatGUI = new ChatGUI();
+			chatGUI.frame.setVisible(true);
 		}
 	}
 
