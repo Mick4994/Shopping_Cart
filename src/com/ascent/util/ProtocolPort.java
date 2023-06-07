@@ -27,6 +27,16 @@ public interface ProtocolPort {
 	public static final int OP_ADD_USERS = 103;
 
 	/**
+	 * 清除用户信息
+	 */
+	public static final int OP_CLEAR_USERS = 104;
+
+	/**
+	 * 注册用户标志
+	 */
+	public static final int OP_UPDATE_USERS = 105;
+
+	/**
 	 * 默认端口号
 	 */
 	public static final int DEFAULT_PORT = 5150;
@@ -35,4 +45,5 @@ public interface ProtocolPort {
 	 * 默认服务器地址
 	 */
 	public static final String DEFAULT_HOST = "localhost";
+
 }

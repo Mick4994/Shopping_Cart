@@ -1,5 +1,7 @@
 package com.ascent.bean;
 
+import java.util.HashMap;
+
 /**
  * 实体类User，用来描述用户的信息类
  * @author ascent
@@ -42,7 +44,7 @@ public class User implements java.io.Serializable {
 		this.password = password;
 		this.authority = authority;
 	}
-	
+
 	/**
 	 * @return the authority
 	 */

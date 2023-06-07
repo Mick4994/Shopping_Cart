@@ -128,6 +128,26 @@ public class ProductDataAccessor extends DataAccessor {
 	}
 
 	/**
+	 * 清空用户数据
+	 */
+	public void deleteUser() {
+		try {
+			log("清空文件: " + USER_FILE_NAME + "...");
+			File file = new File(USER_FILE_NAME);
+			if (file.exists()) {
+				file.delete(); // 删除文件
+				file.createNewFile(); // 创建一个新的空文件
+			}
+			log("文件清空完成!");
+		} catch (IOException exc) {
+			log("清空文件发生异常: " + USER_FILE_NAME + ".");
+			log(exc);
+		}
+	}
+
+
+
+	/**
 	 * 返回带有这些参数的商品对象
 	 * @param productName 药品名称
 	 * @param cas 化学文摘登记号
@@ -175,4 +195,5 @@ public class ProductDataAccessor extends DataAccessor {
 		this.load();
 		return this.userTable;
 	}
+
 }

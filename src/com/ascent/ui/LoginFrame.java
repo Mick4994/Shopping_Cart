@@ -155,8 +155,8 @@ public class LoginFrame extends JFrame {
 					userDataClient.closeSocKet();
 					setVisible(false);
 					dispose();
-					MainFrame myFrame = new MainFrame();
-					myFrame.setVisible(true);
+					AdministratorInterface ui = new AdministratorInterface();
+					ui.setVisible(true);
 				} else {
 					tip.setText("ÕÊºÅ²»´æÔÚ,»òÃÜÂë´íÎó.");
 				}

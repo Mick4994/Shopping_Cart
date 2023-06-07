@@ -124,4 +124,73 @@ public class UserDataClient implements ProtocolPort {
 		return false;
 	}
 
+	/**
+	 * 清除用户信息
+	 */
+	public boolean clearUsers() {
+		try {
+			log("发送请求: OP_CLEAR_USERS");
+			outputToServer.writeInt(ProtocolPort.OP_CLEAR_USERS);
+			outputToServer.flush();
+			log("接收数据...");
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
+	 * 拷贝用户信息
+	 */
+	public boolean updateUsers(Object[][] tableData) {
+		try {
+			// 清空用户信息
+			clearUsers();
+
+			HashMap<String, User> userTable = getUsers();
+			userTable.clear();
+			// 更新用户信息
+			for (Object[] rowData : tableData) {
+				String username = (String) rowData[0];
+				String password = (String) rowData[1];
+				int permission = (int) rowData[2];
+				System.out.println(username+" "+password+" "+permission);
+				if (!username.isEmpty()) {
+					User user = new User(username, password, permission);
+					userTable.put(username, user);
+				}
+			}
+
+			// 保存用户信息
+			saveUsers(userTable);
+
+			return true;
+		} catch (Exception e) {
+			// 异常处理
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+
+	/**
+	 * 保存用户信息
+	 */
+	public void saveUsers(HashMap<String, User> userTable) {
+		try {
+			log("发送请求: OP_SAVE_USERS");
+			outputToServer.writeInt(ProtocolPort.OP_ADD_USERS);
+			//outputToServer.writeInt(userTable.size()); // 发送用户表的大小
+			for (User user : userTable.values()) {
+				outputToServer.writeObject(user); // 逐个发送用户对象
+				System.out.println(user);
+			}
+			outputToServer.flush();
+			log("保存用户信息成功");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 }
