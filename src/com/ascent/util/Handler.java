@@ -72,6 +72,9 @@ public class Handler extends Thread implements ProtocolPort {
 				case ProtocolPort.OP_SEND_CODE:
 					opGetMsg();
 					break;
+				case ProtocolPort.OP_CLEAR_USERS:
+					opDeleteUser();
+					break;
 				default:
 					System.out.println("错误代码");
 				}
@@ -79,6 +82,13 @@ public class Handler extends Thread implements ProtocolPort {
 		} catch (IOException exc) {
 			log(exc);
 		}
+	}
+
+	/**
+	 * 删除用户信息
+	 */
+	private void opDeleteUser() {
+		new ProductDataAccessor().deleteUser();
 	}
 
 	/**

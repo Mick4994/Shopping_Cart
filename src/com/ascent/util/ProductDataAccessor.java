@@ -30,12 +30,12 @@ public class ProductDataAccessor extends DataAccessor {
 	/**
 	 * 商品信息数据文件名
 	 */
-	protected static final String PRODUCT_FILE_NAME = "product.db";
+	protected static final String PRODUCT_FILE_NAME = "product.txt";
 
 	/**
 	 * 用户信息数据文件名
 	 */
-	protected static final String USER_FILE_NAME = "user.db";
+	protected static final String USER_FILE_NAME = "user.txt";
 
 	/**
 	 * 数据记录的分割符
@@ -49,12 +49,13 @@ public class ProductDataAccessor extends DataAccessor {
 		load();
 	}
 
+
 	/**
 	 * 读取数据的方法
 	 */
 	@Override
 	public void load() {
-		
+
 		dataTable = new HashMap<String,ArrayList<Product>>();
 		userTable = new HashMap<String,User>();
 
@@ -73,6 +74,9 @@ public class ProductDataAccessor extends DataAccessor {
 			BufferedReader inputFromFile1 = new BufferedReader(new FileReader(PRODUCT_FILE_NAME));
 
 			while ((line = inputFromFile1.readLine()) != null) {
+				if (line.trim().isEmpty()) {
+					continue; // 跳过空行，获取下一行
+				}
 
 				st = new StringTokenizer(line, ",");
 				//每行的数据 通过字段分割 分别存储于相应的变量中
@@ -134,14 +138,29 @@ public class ProductDataAccessor extends DataAccessor {
 		try {
 			log("清空文件: " + USER_FILE_NAME + "...");
 			File file = new File(USER_FILE_NAME);
+
+			// 检查文件是否存在
 			if (file.exists()) {
-				file.delete(); // 删除文件
-				file.createNewFile(); // 创建一个新的空文件
+				synchronized (file) {
+					try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+						// 清空文件内容
+						writer.write(""); // 或者 writer.write("\n") 以保留一个换行符
+
+						// 刷新缓冲区
+						writer.flush();
+
+						log("文件清空完成!");
+					} catch (IOException e) {
+						log("清空文件发生异常: " + USER_FILE_NAME + ".");
+						log(e);
+					}
+				}
+			} else {
+				log("文件不存在: " + USER_FILE_NAME + ".");
 			}
-			log("文件清空完成!");
-		} catch (IOException exc) {
+		} catch (Exception e) {
 			log("清空文件发生异常: " + USER_FILE_NAME + ".");
-			log(exc);
+			log(e);
 		}
 	}
 
@@ -172,8 +191,12 @@ public class ProductDataAccessor extends DataAccessor {
 		try {
 			String userinfo = user.getUsername() + "," + user.getPassword() + "," + user.getAuthority();
 			RandomAccessFile fos = new RandomAccessFile(USER_FILE_NAME, "rws");
-			fos.seek(fos.length());
-			fos.write(("\n" + userinfo).getBytes());
+//			fos.seek(fos.length());
+//			fos.write(("\n" + userinfo).getBytes());
+			// 检查文件是否为空
+			if (fos.length() > 0) {
+				fos.writeBytes("\n"); // 文件不为空，加上换行符
+			}
 			fos.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

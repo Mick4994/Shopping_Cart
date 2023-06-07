@@ -64,19 +64,6 @@ class UserManagerUI extends JFrame {
         JScrollPane scrollPane = new JScrollPane(table);
         panel.add(scrollPane);
 
-        // 编辑表格时的监听
-        tableModel.addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                int row = e.getFirstRow();
-                int column = e.getColumn();
-                Object newValue = tableModel.getValueAt(row, column);
-
-                // 在这里处理数据更改，例如将新值保存到组件容器中
-                tableModel.setValueAt(newValue, row, column);
-            }
-        });
-
 
         // 创建保存按钮
         saveButton = new JButton("保存");
@@ -143,6 +130,8 @@ class UserManagerUI extends JFrame {
         getContentPane().add(mainPanel);
     }
 
+
+
     public void displayUserData() {
         // 获取用户数据并展示到表格中
         userTable = userDataClient.getUsers();
@@ -167,15 +156,15 @@ class UserManagerUI extends JFrame {
                 i++;
             }
 
-//            // 更新用户信息
-//            if (userDataClient.updateUsers(tableData)) {
-//                // 重新显示用户数据
-//                displayUserData();
-//                // 提示保存成功或其他操作
-//                JOptionPane.showMessageDialog(UserManagerUI.this, "保存成功");
-//            } else {
-//                JOptionPane.showMessageDialog(UserManagerUI.this, "保存失败");
-//            }
+            // 更新用户信息
+            if (userDataClient.updateUsers(tableData)) {
+                // 重新显示用户数据
+                displayUserData();
+                // 提示保存成功或其他操作
+                JOptionPane.showMessageDialog(UserManagerUI.this, "保存成功");
+            } else {
+                JOptionPane.showMessageDialog(UserManagerUI.this, "保存失败");
+            }
         } catch (Exception e) {
             // 异常处理
             e.printStackTrace();
