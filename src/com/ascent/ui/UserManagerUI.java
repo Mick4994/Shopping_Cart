@@ -167,15 +167,15 @@ class UserManagerUI extends JFrame {
                 i++;
             }
 
-            // 更新用户信息
-            if (userDataClient.updateUsers(tableData)) {
-                // 重新显示用户数据
-                displayUserData();
-                // 提示保存成功或其他操作
-                JOptionPane.showMessageDialog(UserManagerUI.this, "保存成功");
-            } else {
-                JOptionPane.showMessageDialog(UserManagerUI.this, "保存失败");
-            }
+//            // 更新用户信息
+//            if (userDataClient.updateUsers(tableData)) {
+//                // 重新显示用户数据
+//                displayUserData();
+//                // 提示保存成功或其他操作
+//                JOptionPane.showMessageDialog(UserManagerUI.this, "保存成功");
+//            } else {
+//                JOptionPane.showMessageDialog(UserManagerUI.this, "保存失败");
+//            }
         } catch (Exception e) {
             // 异常处理
             e.printStackTrace();
