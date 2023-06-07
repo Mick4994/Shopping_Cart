@@ -28,3 +28,10 @@ This is a project for Java Lesson.
 2.创建了一个SCProduct类，这个类相当于是对Product类的扩展。
 3.User类增加了一个购物车属性。
 4.其他类的内容修改都是由于改变shoppingList的修饰词而作出的调整，主要修改是增加一个属性或者调整传参。
+
+第五次提交
+新增了购物车单个商品的删除功能。
+1.ShoppingCartDialog类：
+第41行的Frame改成了MainFrame；在lookShoppingCar方法中，每个商品添加了“删除”按钮，并实现事件监听；新写了一个处理删除按钮事件监听的内部类。
+2.ShoppingCa的r类：
+新增了一个删除购物车的某个商品方法delProduct。
