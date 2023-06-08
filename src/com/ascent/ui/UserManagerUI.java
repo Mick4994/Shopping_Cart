@@ -36,8 +36,21 @@ class UserManagerUI extends JFrame {
     private Map<String, User> userTable;
 
     public UserManagerUI() {
+        try {
+            userDataClient = new UserDataClient(); // 实例化UserDataClient
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                displayUserData();
+                setVisible(true);
+            }
+        });
         setTitle("用户管理");
-        setSize(400, 300);
+        setSize(500, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null); // 居中显示
 
@@ -63,20 +76,6 @@ class UserManagerUI extends JFrame {
         // 创建带滚动条的面板，并添加表格
         JScrollPane scrollPane = new JScrollPane(table);
         panel.add(scrollPane);
-
-        // 编辑表格时的监听
-        tableModel.addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                int row = e.getFirstRow();
-                int column = e.getColumn();
-                Object newValue = tableModel.getValueAt(row, column);
-
-                // 在这里处理数据更改，例如将新值保存到组件容器中
-                tableModel.setValueAt(newValue, row, column);
-            }
-        });
-
 
         // 创建保存按钮
         saveButton = new JButton("保存");
@@ -183,21 +182,4 @@ class UserManagerUI extends JFrame {
         }
     }
 
-
-    public static void main(String[] args) {
-        UserManagerUI userManagerUI = new UserManagerUI();
-        try {
-            userManagerUI.userDataClient = new UserDataClient(); // 实例化UserDataClient
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                userManagerUI.displayUserData();
-                userManagerUI.setVisible(true);
-            }
-        });
-    }
 }

@@ -30,12 +30,12 @@ public class ProductDataAccessor extends DataAccessor {
 	/**
 	 * 商品信息数据文件名
 	 */
-	protected static final String PRODUCT_FILE_NAME = "product.db";
+	protected static final String PRODUCT_FILE_NAME = "product.txt";
 
 	/**
 	 * 用户信息数据文件名
 	 */
-	protected static final String USER_FILE_NAME = "user.db";
+	protected static final String USER_FILE_NAME = "user.txt";
 
 	/**
 	 * 数据记录的分割符
