@@ -74,9 +74,10 @@ public class ProductDataAccessor extends DataAccessor {
 			BufferedReader inputFromFile1 = new BufferedReader(new FileReader(PRODUCT_FILE_NAME));
 
 			while ((line = inputFromFile1.readLine()) != null) {
-				if (line.trim().isEmpty()) {
-					continue; // 跳过空行，获取下一行
-				}
+				System.out.println(line);
+//				if (line.trim().isEmpty()) {
+//					continue; // 跳过空行，获取下一行
+//				}
 
 				st = new StringTokenizer(line, ",");
 				//每行的数据 通过字段分割 分别存储于相应的变量中
@@ -165,7 +166,6 @@ public class ProductDataAccessor extends DataAccessor {
 	}
 
 
-
 	/**
 	 * 返回带有这些参数的商品对象
 	 * @param productName 药品名称
@@ -178,7 +178,7 @@ public class ProductDataAccessor extends DataAccessor {
 	 * @return new Product(productName, cas, structure, formula, price, realstock, category);
 	 */
 	private Product getProductObject(String productName, String cas,
-			String structure, String formula, String price, String realstock, String category) {
+									 String structure, String formula, String price, String realstock, String category) {
 		return new Product(productName, cas, structure, formula, price, realstock, category);
 	}
 
