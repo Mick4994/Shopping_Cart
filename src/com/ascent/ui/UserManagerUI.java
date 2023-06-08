@@ -36,8 +36,21 @@ class UserManagerUI extends JFrame {
     private Map<String, User> userTable;
 
     public UserManagerUI() {
+        try {
+            userDataClient = new UserDataClient(); // 实例化UserDataClient
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                displayUserData();
+                setVisible(true);
+            }
+        });
         setTitle("用户管理");
-        setSize(400, 300);
+        setSize(500, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null); // 居中显示
 
@@ -64,16 +77,24 @@ class UserManagerUI extends JFrame {
         JScrollPane scrollPane = new JScrollPane(table);
         panel.add(scrollPane);
 
-        // 编辑表格时的监听
+        // 添加表格模型监听器
         tableModel.addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
-                int row = e.getFirstRow();
-                int column = e.getColumn();
-                Object newValue = tableModel.getValueAt(row, column);
+                if (e.getType() == TableModelEvent.UPDATE && e.getFirstRow() != TableModelEvent.HEADER_ROW) {
+                    int row = e.getFirstRow();
+                    int column = e.getColumn();
 
-                // 在这里处理数据更改，例如将新值保存到组件容器中
-                tableModel.setValueAt(newValue, row, column);
+                    // 确保行索引在有效范围内
+                    if (row >= 0 && row < tableModel.getRowCount()) {
+                        // 确保列索引在有效范围内
+                        if (column >= 0 && column < tableModel.getColumnCount()) {
+                            // 获取修改后的数据
+                            Object newData = tableModel.getValueAt(row, column);
+
+                        }
+                    }
+                }
             }
         });
 
@@ -149,11 +170,15 @@ class UserManagerUI extends JFrame {
         DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
         tableModel.setRowCount(0); // 清空表格内容
 
+        // 设置表格列数
+        tableModel.setColumnCount(3);
+
         for (User user : userTable.values()) {
             Object[] rowData = {user.getUsername(), user.getPassword(), user.getAuthority()};
             tableModel.addRow(rowData);
         }
     }
+
 
     public void saveUsers() {
         try {
@@ -164,6 +189,9 @@ class UserManagerUI extends JFrame {
                 tableData[i][0] = user.getUsername();
                 tableData[i][1] = user.getPassword();
                 tableData[i][2] = user.getAuthority();
+                System.out.println(tableData[i][0]);
+                System.out.println(tableData[i][1]);
+                System.out.println(tableData[i][2]);
                 i++;
             }
 
@@ -183,21 +211,4 @@ class UserManagerUI extends JFrame {
         }
     }
 
-
-    public static void main(String[] args) {
-        UserManagerUI userManagerUI = new UserManagerUI();
-        try {
-            userManagerUI.userDataClient = new UserDataClient(); // 实例化UserDataClient
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                userManagerUI.displayUserData();
-                userManagerUI.setVisible(true);
-            }
-        });
-    }
 }

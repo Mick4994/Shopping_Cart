@@ -53,6 +53,22 @@ public class ShoppingCart {
 	}
 
 	/**
+	 * 删除购物车的某个商品
+	 */
+	public void delProduct(String productName) {
+		SCProduct product;
+		for (int i = 0; i < shoppingList.size(); i++) {
+			product = shoppingList.get(i);
+			if (productName.equals(product.getTheProduct().getProductname())) {
+				shoppingList.remove(i);
+				return;
+			}
+		}
+		System.out.println("该商品不存在");
+	}
+
+
+	/**
 	 * 清空购物车所购买商品
 	 */
 	public void clearProduct() {
