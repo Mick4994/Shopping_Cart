@@ -23,7 +23,7 @@ public class ChatGUI extends JDialog {
         frame = new JFrame("ChatGUI");
         frame.setBounds(200, 200, 500, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(null);
+        frame.getContentPane().setLayout( null);
 
         chatArea = new JTextArea();
         chatArea.setBounds(10, 10, 460, 400);
