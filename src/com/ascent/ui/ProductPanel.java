@@ -49,6 +49,10 @@ public class ProductPanel extends JPanel {
 
 	protected ProductDataClient myDataClient;
 
+	protected ChatGUI chatGUI;
+
+	protected boolean is_chatting = false;
+
 	/**
 	 * 构建产品面板的构造方法
 	 * @param theParentFrame 面板的父窗体
@@ -192,15 +196,25 @@ public class ProductPanel extends JPanel {
 	}
 
 	/**
-	 * 处理客服聊天按钮时触发的事件监听器
-	 * @author ascent
+	 * 处理聊天按钮时触发的事件监听器
+	 * @author Mick4994
 	 */
 	class chatActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
-			System.out.println("启动客服聊天");
-			ChatGUI chatGUI = new ChatGUI();
-			chatGUI.frame.setVisible(true);
+			if(chatGUI != null) {
+				if(!chatGUI.is_chatting) {
+					System.out.println("启动客服聊天");
+					chatGUI = new ChatGUI();
+					chatGUI.frame.setVisible(true);
+					chatGUI.is_chatting = true;
+				}
+			} else {
+				System.out.println("启动客服聊天");
+				chatGUI = new ChatGUI();
+				chatGUI.frame.setVisible(true);
+				chatGUI.is_chatting = true;
+			}
 		}
 	}
 
