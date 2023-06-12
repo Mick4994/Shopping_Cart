@@ -15,6 +15,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 管理员界面个人信息模块
+ * @author muniu
+ * @version 1.0
+ */
+
 class EditableTableModel extends DefaultTableModel {
     public EditableTableModel(Object[][] rowData, Object[] columnNames) {
         super(rowData, columnNames);
@@ -22,7 +28,8 @@ class EditableTableModel extends DefaultTableModel {
 
     @Override
     public boolean isCellEditable(int row, int column) {
-        return true;
+        // 只有第2列可编辑，列索引从0开始
+        return column == 1;
     }
 }
 
@@ -34,6 +41,10 @@ class UserManagerUI extends JFrame {
 
     private UserDataClient userDataClient;
     private Map<String, User> userTable;
+    private TableModelListener tableModelListener;
+
+    // 在类的成员变量中定义一个标志
+    private boolean updatingFlag = false;
 
     public UserManagerUI() {
         try {
@@ -76,28 +87,6 @@ class UserManagerUI extends JFrame {
         // 创建带滚动条的面板，并添加表格
         JScrollPane scrollPane = new JScrollPane(table);
         panel.add(scrollPane);
-
-        // 添加表格模型监听器
-        tableModel.addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                if (e.getType() == TableModelEvent.UPDATE && e.getFirstRow() != TableModelEvent.HEADER_ROW) {
-                    int row = e.getFirstRow();
-                    int column = e.getColumn();
-
-                    // 确保行索引在有效范围内
-                    if (row >= 0 && row < tableModel.getRowCount()) {
-                        // 确保列索引在有效范围内
-                        if (column >= 0 && column < tableModel.getColumnCount()) {
-                            // 获取修改后的数据
-                            Object newData = tableModel.getValueAt(row, column);
-
-                        }
-                    }
-                }
-            }
-        });
-
 
         // 创建保存按钮
         saveButton = new JButton("保存");
@@ -144,6 +133,8 @@ class UserManagerUI extends JFrame {
                     // 从表格中删除选中行
                     tableModel.removeRow(selectedRow);
 
+                    saveUsers();
+
                     // 提示删除成功或其他操作
                     JOptionPane.showMessageDialog(UserManagerUI.this, "删除成功");
                 }
@@ -162,12 +153,47 @@ class UserManagerUI extends JFrame {
 
         // 将主面板添加到窗口的内容面板中
         getContentPane().add(mainPanel);
+
+        // 创建表格模型监听器
+        tableModelListener = new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                if (e.getType() == TableModelEvent.UPDATE) {
+                    int row = table.convertRowIndexToModel(e.getFirstRow());
+                    int column = table.convertColumnIndexToModel(e.getColumn());
+
+                    // 确保行索引在有效范围内
+                    if (row >= 0 && row < tableModel.getRowCount()) {
+                        // 确保列索引在有效范围内
+                        if (column >= 0 && column < tableModel.getColumnCount()) {
+                            // 检查标志，避免递归调用
+                            if (!updatingFlag) {
+                                // 设置标志为 true
+                                updatingFlag = true;
+                                // 获取修改后的数据
+                                Object newData = tableModel.getValueAt(row, column);
+                                // 更新表格中对应位置的数据
+                                tableModel.setValueAt(newData, row, column);
+                                // 设置标志为 false
+                                updatingFlag = false;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // 添加表格模型监听器
+        tableModel.addTableModelListener(tableModelListener);
     }
 
     public void displayUserData() {
+        // 移除表格模型的监听器
+        table.getModel().removeTableModelListener(tableModelListener);
+
         // 获取用户数据并展示到表格中
         userTable = userDataClient.getUsers();
-        DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+        EditableTableModel tableModel = (EditableTableModel) table.getModel();
         tableModel.setRowCount(0); // 清空表格内容
 
         // 设置表格列数
@@ -177,8 +203,10 @@ class UserManagerUI extends JFrame {
             Object[] rowData = {user.getUsername(), user.getPassword(), user.getAuthority()};
             tableModel.addRow(rowData);
         }
-    }
 
+        // 重新添加表格模型的监听器
+        table.getModel().addTableModelListener(tableModelListener);
+    }
 
     public void saveUsers() {
         try {
@@ -189,26 +217,22 @@ class UserManagerUI extends JFrame {
                 tableData[i][0] = user.getUsername();
                 tableData[i][1] = user.getPassword();
                 tableData[i][2] = user.getAuthority();
-                System.out.println(tableData[i][0]);
-                System.out.println(tableData[i][1]);
-                System.out.println(tableData[i][2]);
                 i++;
             }
 
-//            // 更新用户信息
-//            if (userDataClient.updateUsers(tableData)) {
-//                // 重新显示用户数据
-//                displayUserData();
-//                // 提示保存成功或其他操作
-//                JOptionPane.showMessageDialog(UserManagerUI.this, "保存成功");
-//            } else {
-//                JOptionPane.showMessageDialog(UserManagerUI.this, "保存失败");
-//            }
+            // 更新用户信息
+            if (userDataClient.updateUsers(tableData)) {
+                // 重新显示用户数据
+                displayUserData();
+                // 提示保存成功或其他操作
+                JOptionPane.showMessageDialog(UserManagerUI.this, "保存成功");
+            } else {
+                JOptionPane.showMessageDialog(UserManagerUI.this, "保存失败");
+            }
         } catch (Exception e) {
             // 异常处理
             e.printStackTrace();
             JOptionPane.showMessageDialog(UserManagerUI.this, "保存出现异常: " + e.getMessage());
         }
     }
-
 }

@@ -191,6 +191,10 @@ public class ProductPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * 处理客服聊天按钮时触发的事件监听器
+	 * @author ascent
+	 */
 	class chatActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {

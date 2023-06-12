@@ -15,6 +15,8 @@ import javax.swing.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,48 +74,75 @@ class ProductManagerUI extends JFrame {
 
         // 显示商品集合数据
         displayProductData();
+        saveProductData ();
     }
 
-    public void displayProductData() {
-        // 填充表格数据
-        DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-        //tableModel.setRowCount(0); // 清空表格内容
-        // 获取商品分类
-        // 获取商品分类
-        try {
-            ArrayList<String> category = productDataClient.getCategories();
-            int row = 0; // 初始化行数
-            for (String categoryName : category) {
-                // 在这里执行对每个分类的操作
-                // 获取商品集合数据
-                ArrayList<Product> productList = productDataClient.getProducts(categoryName);
-                System.out.println("商品分类：" + categoryName);
-                for (Product product : productList) {
-                    String data = product.getProductname();
-                    String pattern = "\\d+";
-                    Pattern regex = Pattern.compile(pattern);
-                    Matcher matcher = regex.matcher(data);
-                    if (matcher.find()) {
-                        String numberStr = matcher.group();
-                        int number = Integer.parseInt(numberStr);
-                        System.out.println("提取的数字：" + number);
-                        row = number - 1;
-                    } else {
-                        System.out.println("未找到数字");
-                        row++;
+        public void displayProductData () {
+            // 填充表格数据
+            DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+            //tableModel.setRowCount(0); // 清空表格内容
+            // 获取商品分类
+            // 获取商品分类
+            try {
+                ArrayList<String> category = productDataClient.getCategories();
+                int row = 0; // 初始化行数
+                for (String categoryName : category) {
+                    // 在这里执行对每个分类的操作
+                    // 获取商品集合数据
+                    ArrayList<Product> productList = productDataClient.getProducts(categoryName);
+                    System.out.println("商品分类：" + categoryName);
+                    for (Product product : productList) {
+                        String data = product.getProductname();
+                        String pattern = "\\d+";
+                        Pattern regex = Pattern.compile(pattern);
+                        Matcher matcher = regex.matcher(data);
+                        if (matcher.find()) {
+                            String numberStr = matcher.group();
+                            int number = Integer.parseInt(numberStr);
+                            System.out.println("提取的数字：" + number);
+                            row = number - 1;
+                        } else {
+                            System.out.println("未找到数字");
+                            row++;
+                        }
+                        Object[] rowData = {product.getProductname(), product.getCas(), product.getStructure(), product.getFormula(),
+                                product.getPrice(), product.getRealstock(), product.getCategory()};
+                        for (int i = 0; i < rowData.length; i++) {
+                            tableModel.setValueAt(rowData[i], row, i);
+                        }
+                        // row++; // 递增行数
                     }
-                    Object[] rowData = {product.getProductname(), product.getCas(), product.getStructure(), product.getFormula(),
-                            product.getPrice(), product.getRealstock(), product.getCategory()};
-                    for (int i = 0; i < rowData.length; i++) {
-                        tableModel.setValueAt(rowData[i], row, i);
-                    }
-                    // row++; // 递增行数
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
         }
 
+    public void saveProductData () {
+        // 获取表格数据
+        DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+        int rowCount = tableModel.getRowCount();
+        int columnCount = tableModel.getColumnCount();
+
+        // 将表格数据写入文件
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("product.txt"))) {
+            for (int row = 0; row < rowCount; row++) {
+                StringBuilder line = new StringBuilder();
+                for (int column = 0; column < columnCount; column++) {
+                    line.append(tableModel.getValueAt(row, column));
+                    if (column < columnCount - 1) {
+                        line.append(",");
+                    }
+                }
+                writer.write(line.toString());
+                writer.newLine();
+            }
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
 
     }
 }

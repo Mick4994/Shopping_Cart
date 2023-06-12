@@ -74,10 +74,9 @@ public class ProductDataAccessor extends DataAccessor {
 			BufferedReader inputFromFile1 = new BufferedReader(new FileReader(PRODUCT_FILE_NAME));
 
 			while ((line = inputFromFile1.readLine()) != null) {
-				System.out.println(line);
-//				if (line.trim().isEmpty()) {
-//					continue; // 跳过空行，获取下一行
-//				}
+				if (line.trim().isEmpty()) {
+					continue; // 跳过空行，获取下一行
+				}
 
 				st = new StringTokenizer(line, ",");
 				//每行的数据 通过字段分割 分别存储于相应的变量中
@@ -107,6 +106,10 @@ public class ProductDataAccessor extends DataAccessor {
 			log("读取文件: " + USER_FILE_NAME + "...");
 			BufferedReader inputFromFile2 = new BufferedReader(new FileReader(USER_FILE_NAME));
 			while ((line = inputFromFile2.readLine()) != null) {
+				System.out.println(line);
+				if (line.trim().isEmpty()) {
+					continue; // 跳过空行，获取下一行
+				}
 
 				st = new StringTokenizer(line, ",");
 
@@ -183,7 +186,7 @@ public class ProductDataAccessor extends DataAccessor {
 	}
 
 	/**
-	 * 保存数据
+	 * 保存用户数据
 	 */
 	@Override
 	public void save(User user) {
@@ -191,12 +194,13 @@ public class ProductDataAccessor extends DataAccessor {
 		try {
 			String userinfo = user.getUsername() + "," + user.getPassword() + "," + user.getAuthority();
 			RandomAccessFile fos = new RandomAccessFile(USER_FILE_NAME, "rws");
-//			fos.seek(fos.length());
+			fos.seek(fos.length());  //将指针移动到文件尾
 //			fos.write(("\n" + userinfo).getBytes());
 			// 检查文件是否为空
 			if (fos.length() > 0) {
 				fos.writeBytes("\n"); // 文件不为空，加上换行符
 			}
+			fos.writeBytes(userinfo); // 写入用户信息
 			fos.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
