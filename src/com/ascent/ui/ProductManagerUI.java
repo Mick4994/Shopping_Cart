@@ -74,7 +74,7 @@ class ProductManagerUI extends JFrame {
 
         // 显示商品集合数据
         displayProductData();
-        saveProductData ();
+        //saveProductData ();
     }
 
         public void displayProductData () {
