@@ -7,6 +7,15 @@ package com.ascent.util;
  */
 public interface ProtocolPort {
 	/**
+	 * 默认端口号
+	 */
+	public static final int DEFAULT_PORT = 5170;
+
+	/**
+	 * 默认服务器地址
+	 */
+	public static final String DEFAULT_HOST = "localhost";
+	/**
 	 * 获取所有商品分类名称标志
 	 */
 	public static final int OP_GET_PRODUCT_CATEGORIES = 100;
@@ -26,17 +35,6 @@ public interface ProtocolPort {
 	 */
 	public static final int OP_ADD_USERS = 103;
 
-
-	/**
-	 * 默认端口号
-	 */
-	public static final int DEFAULT_PORT = 5170;
-
-	/**
-	 * 默认服务器地址
-	 */
-	public static final String DEFAULT_HOST = "localhost";
-
 	/**
 	 * 验证码发送标志
 	 */
@@ -51,4 +49,8 @@ public interface ProtocolPort {
 	 * 更新用户标志
 	 */
 	public static final int OP_UPDATE_USERS = 106;
+
+	public static final int OP_GET_FEEDBACK = 107;
+
+	public static final int OP_GET_FEEDBACK_NUM = 108;
 }

@@ -202,7 +202,7 @@ public class LoginFrame extends JFrame {
 				User userObject = new User("Œﬁ√˚ œ", "123456");
 				if (userTable.containsKey(text)) {
 					userObject = (User) userTable.get(text);
-					if (userObject.getAuthority() == 0 && userObject.getPassword().equals(pwd)) {
+					if (userObject.getPassword().equals(pwd)) {
 						bo = true;
 					}
 				}

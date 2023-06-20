@@ -75,6 +75,12 @@ public class Handler extends Thread implements ProtocolPort {
 				case ProtocolPort.OP_CLEAR_USERS:
 					opDeleteUser();
 					break;
+				case ProtocolPort.OP_GET_FEEDBACK:
+					opGetFeedBack();
+					break;
+				case ProtocolPort.OP_GET_FEEDBACK_NUM:
+					opGetFeedBackNum();
+					break;
 				default:
 					System.out.println("´íÎó´úÂë");
 				}
@@ -191,6 +197,51 @@ public class Handler extends Thread implements ProtocolPort {
 	 */
 	protected void log(Object msg) {
 		System.out.println("´¦ÀíÆ÷: " + msg);
+	}
+
+	protected void opGetFeedBackNum() {
+		File feedbackfile = new File("./FeedbackMsg/");
+		String[] filelist = feedbackfile.list();
+		try {
+			if (filelist != null) {
+				outputToClient.writeInt(filelist.length);
+			} else {
+				outputToClient.writeInt(0);
+			}
+			outputToClient.flush();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected void opGetFeedBack() throws IOException {
+		File feedbackfile = new File("./FeedbackMsg/");
+		String[] filelist = feedbackfile.list();
+//		assert filelist != null;
+		if(filelist == null) {
+			return;
+		}
+		if(filelist.length != 0) {
+			String[] context = new String[filelist.length];
+			for(String filename : filelist) {
+//            System.out.println(filename);
+				File file = new File("./FeedbackMsg/" + filename);
+				try {
+					BufferedReader inputFromFile = new BufferedReader(
+							new FileReader("./FeedbackMsg/" + filename));
+					String line = inputFromFile.readLine();
+					if(line != null) {
+						outputToClient.writeObject(line);
+						outputToClient.flush();
+					}
+					inputFromFile.close();
+				} catch (FileNotFoundException e) {
+					throw new RuntimeException(e);
+				}
+			}
+
+		}
+
 	}
 
 }

@@ -249,11 +249,11 @@ public class UserDataClient implements ProtocolPort {
 				outputToServer.writeObject(user); // 逐个发送用户对象
 				System.out.println(user);
 				outputToServer.flush();
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+//				try {
+//					Thread.sleep(1000);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
 			}
 			log("保存用户信息成功");
 		} catch (IOException e) {
