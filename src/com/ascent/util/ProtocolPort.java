@@ -58,4 +58,14 @@ public interface ProtocolPort {
 	 * 读取管理员个人信息标志
 	 */
 	public static final int OP_GET_PERSON_MSG = 109;
+
+	/**
+	 * 保存管理员个人头像标志
+	 */
+	public static final int OP_SAVE_PERSON_IMAGE_MSG = 110;
+
+	/**
+	 * 保存管理员个人昵称和生日标志
+	 */
+	public static final int OP_SAVE_PERSON_INFO = 111;
 }

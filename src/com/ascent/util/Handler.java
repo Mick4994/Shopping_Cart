@@ -3,6 +3,9 @@ package com.ascent.util;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 import com.ascent.bean.Product;
@@ -87,12 +90,84 @@ public class Handler extends Thread implements ProtocolPort {
 				case ProtocolPort.OP_GET_PERSON_MSG:
 					opGetPersonMessage();
 					break;
+				case ProtocolPort.OP_SAVE_PERSON_IMAGE_MSG:
+					opSetPersonSImageMessage();
+					break;
+				case ProtocolPort.OP_SAVE_PERSON_INFO:
+					opSetPersonSMessage();
+					break;
 				default:
 					System.out.println("错误代码");
 				}
 			}
 		} catch (IOException exc) {
 			log(exc);
+		}
+	}
+
+	/**
+	 * 保存管理员个人生日和昵称的保存
+	 */
+	private void opSetPersonSMessage() {
+		// 处理保存个人信息请求
+		String fileContent = null;
+		try {
+			fileContent = (String) inputFromClient.readObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		BufferedWriter writer = null;
+		try {
+			writer = new BufferedWriter(new FileWriter("./src/images/administratorMessage.txt"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			writer.write(fileContent);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("个人生日和昵称信息已保存");
+	}
+
+	/**
+	 * 保存管理员个人头像的保存
+	 */
+	private void opSetPersonSImageMessage() {
+		// 接收图像数据
+		String dataType = null;
+		try {
+			dataType = (String) inputFromClient.readObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		if (dataType.equals("image")) {
+			byte[] imageData = new byte[0];
+			try {
+				imageData = (byte[]) inputFromClient.readObject();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+
+			// 保存图像到文件
+			Path imagePath = Path.of("./src/images/administratorImage.jpg");
+			try {
+				Files.write(imagePath, imageData, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println("头像已保存到文件: " + imagePath.toAbsolutePath());
 		}
 	}
 
