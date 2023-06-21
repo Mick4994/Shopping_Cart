@@ -1,11 +1,14 @@
 package com.ascent.util;
 
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
 import com.ascent.bean.Product;
 import com.ascent.bean.User;
+
+import javax.imageio.ImageIO;
 
 /**
  * 这个类是socket连接的处理器 例如：
@@ -81,6 +84,9 @@ public class Handler extends Thread implements ProtocolPort {
 				case ProtocolPort.OP_GET_FEEDBACK_NUM:
 					opGetFeedBackNum();
 					break;
+				case ProtocolPort.OP_GET_PERSON_MSG:
+					opGetPersonMessage();
+					break;
 				default:
 					System.out.println("错误代码");
 				}
@@ -88,6 +94,50 @@ public class Handler extends Thread implements ProtocolPort {
 		} catch (IOException exc) {
 			log(exc);
 		}
+	}
+
+	/**
+	 * 处理管理员个人信息的读取
+	 */
+	private void opGetPersonMessage() {
+		try {
+			// 读取图像文件并将其转换为字节数组
+			File imageFile = new File("./src/images/administratorImage.jpg");
+			BufferedImage image = ImageIO.read(imageFile);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write(image, "jpg", baos);
+			byte[] imageData = baos.toByteArray();
+
+			// 发送图像数据给客户端
+			outputToClient.writeObject("image"); // 发送图像数据的标识
+			outputToClient.flush();
+			outputToClient.writeObject(imageData); // 发送图像数据
+			outputToClient.flush();
+			System.out.println("图像已发送");
+
+			// 读取文件内容为String类型
+			String filePath = "./src/images/administratorMessage.txt";
+			String fileContent = readFileAsString(filePath);
+
+			// 发送文件内容给客户端
+			outputToClient.writeObject(fileContent);
+			outputToClient.flush();
+			System.out.println("文件内容已发送");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static String readFileAsString(String filePath) throws IOException {
+		StringBuilder content = new StringBuilder();
+		BufferedReader reader = new BufferedReader(new FileReader(filePath));
+		String line;
+		while ((line = reader.readLine()) != null) {
+			content.append(line);
+		}
+		reader.close();
+		return content.toString();
 	}
 
 	/**

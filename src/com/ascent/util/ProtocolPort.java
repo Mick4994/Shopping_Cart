@@ -53,4 +53,9 @@ public interface ProtocolPort {
 	public static final int OP_GET_FEEDBACK = 107;
 
 	public static final int OP_GET_FEEDBACK_NUM = 108;
+
+	/**
+	 * 读取管理员个人信息标志
+	 */
+	public static final int OP_GET_PERSON_MSG = 109;
 }
