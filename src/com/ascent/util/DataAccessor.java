@@ -15,7 +15,7 @@ public abstract class DataAccessor {
 	/**
 	 * 存放产品信息的HashMap/Hashtable .
 	 */
-	protected HashMap<String,ArrayList<Product>> dataTable;
+	protected static HashMap<String,ArrayList<Product>> dataTable;
 
 	/**
 	 * 存放用户信息的HashMap/Hashtable .

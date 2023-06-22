@@ -380,6 +380,7 @@ public class Handler extends Thread implements ProtocolPort {
 		try {
 			Object[][] productData = (Object[][]) this.inputFromClient.readObject();
 			this.myProductDataAccessor.saveProducts(productData);
+			new ProductDataAccessor();
 			log("商品保存处理完成");
 		} catch (IOException e) {
 			e.printStackTrace();

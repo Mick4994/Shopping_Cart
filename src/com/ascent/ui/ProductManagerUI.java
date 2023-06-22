@@ -135,15 +135,13 @@ class ProductManagerUI extends JFrame {
         buttonPanel.add(addButton);
         buttonPanel.add(delButton);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-        //saveProductData ();
+        // 将主面板添加到窗口的内容面板中
+        getContentPane().add(mainPanel);
     }
 
     public void displayProductData () {
         // 填充表格数据
         DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-        //tableModel.setRowCount(0); // 清空表格内容
-        // 获取商品分类
-        // 获取商品分类
         try {
             ArrayList<String> category = productDataClient.getCategories();
             int row = 0; // 初始化行数
@@ -151,21 +149,7 @@ class ProductManagerUI extends JFrame {
                 // 在这里执行对每个分类的操作
                 // 获取商品集合数据
                 ArrayList<Product> productList = productDataClient.getProducts(categoryName);
-                System.out.println("商品分类：" + categoryName);
                 for (Product product : productList) {
-                    String data = product.getProductname();
-                    String pattern = "\\d+";
-                    Pattern regex = Pattern.compile(pattern);
-                    Matcher matcher = regex.matcher(data);
-                    if (matcher.find()) {
-                        String numberStr = matcher.group();
-                        int number = Integer.parseInt(numberStr);
-                        System.out.println("提取的数字：" + number);
-                        //row = number - 1;
-                    } else {
-                        System.out.println("未找到数字");
-                        //row++;
-                    }
                     Object[] rowData = {product.getProductname(), product.getCas(), product.getStructure(), product.getFormula(),
                             product.getPrice(), product.getRealstock(), product.getCategory()};
                     for (int i = 0; i < rowData.length; i++) {
