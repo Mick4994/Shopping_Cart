@@ -96,6 +96,9 @@ public class Handler extends Thread implements ProtocolPort {
 				case ProtocolPort.OP_SAVE_PERSON_INFO:
 					opSetPersonSMessage();
 					break;
+				case ProtocolPort.OP_SAVE_PRODUCTS:
+					opSaveProductData();
+					break;
 				default:
 					System.out.println("错误代码");
 				}
@@ -369,4 +372,19 @@ public class Handler extends Thread implements ProtocolPort {
 
 	}
 
+	/**
+	 * 处理商品信息保存
+	 */
+	protected void opSaveProductData() {
+		log("商品保存处理中....");
+		try {
+			Object[][] productData = (Object[][]) this.inputFromClient.readObject();
+			this.myProductDataAccessor.saveProducts(productData);
+			log("商品保存处理完成");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 }

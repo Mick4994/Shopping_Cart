@@ -68,4 +68,9 @@ public interface ProtocolPort {
 	 * 保存管理员个人昵称和生日标志
 	 */
 	public static final int OP_SAVE_PERSON_INFO = 111;
+
+	/**
+	 * 保存商品信息标志
+	 */
+	public static final int OP_SAVE_PRODUCTS = 112;
 }

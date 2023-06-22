@@ -161,17 +161,17 @@ class ProductManagerUI extends JFrame {
                         String numberStr = matcher.group();
                         int number = Integer.parseInt(numberStr);
                         System.out.println("提取的数字：" + number);
-                        row = number - 1;
+                        //row = number - 1;
                     } else {
                         System.out.println("未找到数字");
-                        row++;
+                        //row++;
                     }
                     Object[] rowData = {product.getProductname(), product.getCas(), product.getStructure(), product.getFormula(),
                             product.getPrice(), product.getRealstock(), product.getCategory()};
                     for (int i = 0; i < rowData.length; i++) {
                         tableModel.setValueAt(rowData[i], row, i);
                     }
-                    //row++; // 递增行数
+                    row++; // 递增行数
                 }
             }
         } catch (IOException e) {
@@ -206,7 +206,7 @@ class ProductManagerUI extends JFrame {
             }
             System.out.println();
         }
-        productDataClient.saveProducts(productData);
+        productDataClient.saveProductsRequest(productData);
         JOptionPane.showMessageDialog(null,"保存成功");
     }
 }

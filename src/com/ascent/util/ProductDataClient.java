@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import com.ascent.bean.Product;
+import com.ascent.bean.User;
 
 /**
  * 这个类连接数据服务器来获得数据
@@ -95,6 +96,21 @@ public class ProductDataClient implements ProtocolPort {
 		}
 
 		return productList;
+	}
+
+	/**
+	 *
+	 */
+	public void saveProductsRequest(Object productData[][]) {
+		try {
+			log("发送保存商品的请求: OP_SAVE_PRODUCTS");
+			outputToServer.writeInt(ProtocolPort.OP_SAVE_PRODUCTS);
+			outputToServer.writeObject(productData); //发送存有商品信息的二维数组
+			outputToServer.flush();
+			log("保存商品信息成功");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

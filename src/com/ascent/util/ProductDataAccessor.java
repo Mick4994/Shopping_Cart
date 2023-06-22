@@ -210,6 +210,32 @@ public class ProductDataAccessor extends DataAccessor {
 	}
 
 	/**
+	 * 保存商品信息
+	 */
+	protected void saveProducts(Object productData[][]) {
+		try {
+			log("打开文件: " + PRODUCT_FILE_NAME + "进行保存...");
+			OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(PRODUCT_FILE_NAME));
+			osw.write("");//清空文件内容
+			String productInfo = "";
+			for(int i = 0; i < productData.length; i++) {
+				for (int j = 0; j < 6; j++) {
+					productInfo = productInfo + productData[i][j] + ",";
+				}
+				productInfo = productInfo + productData[i][6] + "\n";
+				osw.write(productInfo);
+				productInfo = "";
+			}
+			osw.close();
+			log("商品保存成功");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * 日志方法.
 	 */
 	@Override
